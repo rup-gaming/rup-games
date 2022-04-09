@@ -1,18 +1,20 @@
 <template>
   <n-config-provider :theme="darkTheme">
-    <n-layout style="height: 100vh" :native-scrollbar="false">
-      <n-layout-header bordered>
+    <n-layout style="height: 100vh">
+      <n-layout-header bordered class="app-header">
         <router-link color="red" to="/">Home</router-link>
         <router-link to="/play">Play</router-link>
       </n-layout-header>
       <n-layout
+        position="absolute"
         :native-scrollbar="false"
-        content-style="padding: 24px;"
         class="main-layout"
       >
-        <router-view></router-view>
+        <n-layout style="height: 100vh; padding: 24px">
+          <router-view></router-view>
+        </n-layout>
+        <n-layout-footer bordered> Footer </n-layout-footer>
       </n-layout>
-      <n-layout-footer bordered> Footer </n-layout-footer>
     </n-layout>
   </n-config-provider>
 </template>
@@ -22,6 +24,7 @@ import { defineComponent } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import {
   darkTheme,
+  lightTheme,
   NConfigProvider,
   NLayout,
   NLayoutHeader,
@@ -30,17 +33,21 @@ import {
 
 defineComponent({
   darkTheme,
+  lightTheme,
 });
 </script>
 
 <style scoped>
-.main-layout {
-  height: 100vh;
+.app-header {
+  height: 70px;
+  padding: 0px 24px 0px 24px;
   display: flex;
+  align-items: center;
 }
 
-.n-layout-header {
-  padding: 24px;
+.main-layout {
+  top: 70px;
+  padding: 0px;
 }
 
 .n-layout-footer {
