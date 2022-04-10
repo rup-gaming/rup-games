@@ -15,7 +15,7 @@ import { RupFooter } from "../components";
 
 <style scoped>
 .main-layout {
-  top: 70px;
+  top: 64px;
   padding: 0px;
 }
 </style>
