@@ -6,10 +6,10 @@
       </n-icon>
       <n-h3 class="title">Rup Games</n-h3>
     </div>
-    <div class="links">
+    <div class="links" v-show="windowWidth > 600">
       <n-menu mode="horizontal" :options="menuOptions" />
     </div>
-    <n-icon size="30" v-if="windowWidth < 600">
+    <n-icon size="30" v-show="windowWidth <= 600">
       <menu-sharp />
     </n-icon>
   </n-layout-header>
@@ -70,7 +70,7 @@ defineComponent({
 
 <style scoped>
 .logo-title {
-  min-width: 200px;
+  min-width: 240px;
   display: flex;
   height: 100%;
   align-items: center;
