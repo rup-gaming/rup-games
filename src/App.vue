@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme">
+  <n-config-provider :theme="store.darkMode ? darkTheme : lightTheme">
     <n-layout style="height: 100vh">
       <rup-header> </rup-header>
       <rup-content> </rup-content>

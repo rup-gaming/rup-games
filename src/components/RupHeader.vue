@@ -14,6 +14,7 @@
     </div>
     <n-button
       ghost
+      @click="disableDarkMode(true)"
       type="primary"
       v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
       v-if="!store.darkMode"
@@ -27,6 +28,7 @@
     </n-button>
     <n-button
       ghost
+      @click="disableDarkMode(false)"
       type="primary"
       v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
       v-else
@@ -61,6 +63,10 @@ import {
 } from "@vicons/material";
 
 const store = useStore();
+
+function disableDarkMode(isDark: boolean) {
+  store.setDarkMode(isDark);
+}
 
 const menuOptions: MenuOption[] = [
   {
