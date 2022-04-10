@@ -1,55 +1,75 @@
 <template>
   <n-layout-header bordered>
-    <div class="logo-title">
+    <div class="side-container-left">
       <n-icon size="30" class="logo">
         <diamond-sharp />
       </n-icon>
       <n-h3 class="title">Rup Games</n-h3>
     </div>
+
     <div
-      class="links"
+      class="menu"
       v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
     >
       <n-menu
         :value="`${currentRoute.name}`"
         mode="horizontal"
-        :options="menuOptions"
+        :options="appNavigation"
       />
     </div>
-    <n-button
-      ghost
-      @click="disableDarkMode(true)"
-      type="primary"
-      v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
-      v-if="!store.darkMode"
-    >
-      <template #icon>
-        <n-icon size="20">
-          <dark-mode-outlined />
-        </n-icon>
-      </template>
-      Dark
-    </n-button>
-    <n-button
-      ghost
-      @click="disableDarkMode(false)"
-      type="primary"
-      v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
-      v-else
-    >
-      <template #icon>
-        <n-icon size="20">
-          <light-mode-outlined />
-        </n-icon>
-      </template>
-      Light
-    </n-button>
-    <n-icon
-      size="30"
-      v-show="store.windowWidth === 'xs' || store.windowWidth === 'sm'"
-    >
-      <menu-sharp />
-    </n-icon>
+
+    <div class="side-container-right">
+      <n-button
+        class="side-container-item"
+        text
+        tag="a"
+        href="https://github.com/waylonturbes/square-game"
+        target="_blank"
+        v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
+      >
+        GitHub
+      </n-button>
+
+      <n-button
+        ghost
+        style="margin-left: 20px"
+        @click="disableDarkMode(true)"
+        type="default"
+        v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
+        v-if="!store.darkMode"
+      >
+        <template #icon>
+          <n-icon size="20">
+            <dark-mode-outlined />
+          </n-icon>
+        </template>
+        Dark
+      </n-button>
+
+      <n-button
+        ghost
+        style="margin-left: 20px"
+        @click="disableDarkMode(false)"
+        type="default"
+        v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
+        v-else
+      >
+        <template #icon>
+          <n-icon size="20">
+            <light-mode-outlined />
+          </n-icon>
+        </template>
+        Light
+      </n-button>
+
+      <n-icon
+        size="30"
+        style="margin-left: 20px"
+        v-show="store.windowWidth === 'xs' || store.windowWidth === 'sm'"
+      >
+        <menu-sharp />
+      </n-icon>
+    </div>
   </n-layout-header>
 </template>
 
@@ -73,7 +93,7 @@ function disableDarkMode(isDark: boolean) {
   store.setDarkMode(isDark);
 }
 
-const menuOptions: MenuOption[] = [
+const appNavigation: MenuOption[] = [
   {
     label: () =>
       h(
@@ -122,11 +142,27 @@ defineComponent({
 </script>
 
 <style scoped>
-.logo-title {
+.side-container-left {
   min-width: 240px;
   display: flex;
   height: 100%;
   align-items: center;
+}
+
+.side-container-right {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.side-container-right {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.side-container-item {
+  padding: 0px 20px;
 }
 
 .logo {
@@ -137,7 +173,7 @@ defineComponent({
   margin: 0px;
 }
 
-.links {
+.menu {
   flex: auto;
 }
 
