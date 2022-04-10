@@ -10,7 +10,11 @@
       class="links"
       v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
     >
-      <n-menu mode="horizontal" :options="menuOptions" />
+      <n-menu
+        :value="`${currentRoute.name}`"
+        mode="horizontal"
+        :options="menuOptions"
+      />
     </div>
     <n-button
       ghost
@@ -21,10 +25,10 @@
     >
       <template #icon>
         <n-icon size="20">
-          <light-mode-outlined />
+          <dark-mode-outlined />
         </n-icon>
       </template>
-      Light
+      Dark
     </n-button>
     <n-button
       ghost
@@ -35,10 +39,10 @@
     >
       <template #icon>
         <n-icon size="20">
-          <dark-mode-outlined />
+          <light-mode-outlined />
         </n-icon>
       </template>
-      Dark
+      Light
     </n-button>
     <n-icon
       size="30"
@@ -51,7 +55,7 @@
 
 <script setup lang="ts">
 import { defineComponent, h } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import { NLayoutHeader, NIcon, NH3, NMenu, NButton } from "naive-ui";
 import type { MenuOption } from "naive-ui";
 import { useStore } from "../store/store";
@@ -63,6 +67,7 @@ import {
 } from "@vicons/material";
 
 const store = useStore();
+const currentRoute = useRoute();
 
 function disableDarkMode(isDark: boolean) {
   store.setDarkMode(isDark);
@@ -74,7 +79,9 @@ const menuOptions: MenuOption[] = [
       h(
         RouterLink,
         {
-          to: "/",
+          to: {
+            name: "home",
+          },
         },
         { default: () => "Home" }
       ),
@@ -96,7 +103,9 @@ const menuOptions: MenuOption[] = [
       h(
         RouterLink,
         {
-          to: "/play",
+          to: {
+            name: "play",
+          },
         },
         { default: () => "Play" }
       ),
