@@ -1,10 +1,12 @@
 <template>
   <n-layout-header bordered>
     <div class="side-container-left">
-      <n-icon size="30" class="logo">
-        <diamond-sharp />
-      </n-icon>
-      <n-h3 class="title">Rup Games</n-h3>
+      <n-button text :focusable="false">
+        <n-icon size="30" class="logo">
+          <diamond-sharp />
+        </n-icon>
+        <n-h3 class="title">Rup Games</n-h3>
+      </n-button>
     </div>
 
     <div
@@ -25,13 +27,14 @@
         tag="a"
         href="https://github.com/waylonturbes/square-game"
         target="_blank"
+        :focusable="false"
         v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
       >
         GitHub
       </n-button>
 
       <n-button
-        ghost
+        text
         style="margin-left: 20px"
         @click="disableDarkMode(true)"
         type="default"
@@ -47,7 +50,7 @@
       </n-button>
 
       <n-button
-        ghost
+        text
         style="margin-left: 20px"
         @click="disableDarkMode(false)"
         type="default"
@@ -62,13 +65,14 @@
         Light
       </n-button>
 
-      <n-icon
-        size="30"
-        style="margin-left: 20px"
-        v-show="store.windowWidth === 'xs' || store.windowWidth === 'sm'"
-      >
-        <menu-sharp />
-      </n-icon>
+      <n-button text style="margin-left: 20px">
+        <n-icon
+          size="30"
+          v-show="store.windowWidth === 'xs' || store.windowWidth === 'sm'"
+        >
+          <menu-sharp />
+        </n-icon>
+      </n-button>
     </div>
   </n-layout-header>
 </template>
@@ -145,20 +149,13 @@ defineComponent({
 .side-container-left {
   min-width: 240px;
   display: flex;
-  height: 100%;
   align-items: center;
 }
 
 .side-container-right {
   display: flex;
-  height: 100%;
   align-items: center;
-}
-
-.side-container-right {
-  display: flex;
-  height: 100%;
-  align-items: center;
+  justify-content: flex-end;
 }
 
 .side-container-item {
