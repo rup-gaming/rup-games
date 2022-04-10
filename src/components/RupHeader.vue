@@ -7,9 +7,7 @@
       <n-h3 class="title">Rup Games</n-h3>
     </div>
     <div class="links">
-      <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
-      <router-link to="/play">Play</router-link>
+      <n-menu mode="horizontal" :options="menuOptions" />
     </div>
     <n-icon size="30">
       <menu-sharp />
@@ -18,10 +16,47 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, h } from "vue";
 import { RouterLink } from "vue-router";
-import { NLayoutHeader, NIcon, NH3 } from "naive-ui";
+import { NLayoutHeader, NIcon, NH3, NMenu } from "naive-ui";
+import type { MenuOption } from "naive-ui";
 import { DiamondSharp, MenuSharp } from "@vicons/material";
+
+const menuOptions: MenuOption[] = [
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: "/",
+        },
+        { default: () => "Home" }
+      ),
+    key: "home",
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: "/about",
+        },
+        { default: () => "About" }
+      ),
+    key: "about",
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: "/play",
+        },
+        { default: () => "Play" }
+      ),
+    key: "play",
+  },
+];
 
 defineComponent({
   DiamondSharp,
