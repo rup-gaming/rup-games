@@ -6,10 +6,42 @@
       </n-icon>
       <n-h3 class="title">Rup Games</n-h3>
     </div>
-    <div class="links" v-show="windowWidth > 600">
+    <div
+      class="links"
+      v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
+    >
       <n-menu mode="horizontal" :options="menuOptions" />
     </div>
-    <n-icon size="30" v-show="windowWidth <= 600">
+    <n-button
+      ghost
+      type="primary"
+      v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
+      v-if="!store.darkMode"
+    >
+      <template #icon>
+        <n-icon size="20">
+          <light-mode-outlined />
+        </n-icon>
+      </template>
+      Light
+    </n-button>
+    <n-button
+      ghost
+      type="primary"
+      v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
+      v-else
+    >
+      <template #icon>
+        <n-icon size="20">
+          <dark-mode-outlined />
+        </n-icon>
+      </template>
+      Dark
+    </n-button>
+    <n-icon
+      size="30"
+      v-show="store.windowWidth === 'xs' || store.windowWidth === 'sm'"
+    >
       <menu-sharp />
     </n-icon>
   </n-layout-header>
@@ -18,13 +50,17 @@
 <script setup lang="ts">
 import { defineComponent, h } from "vue";
 import { RouterLink } from "vue-router";
-import { NLayoutHeader, NIcon, NH3, NMenu } from "naive-ui";
+import { NLayoutHeader, NIcon, NH3, NMenu, NButton } from "naive-ui";
 import type { MenuOption } from "naive-ui";
-import { DiamondSharp, MenuSharp } from "@vicons/material";
+import { useStore } from "../store/store";
+import {
+  DiamondSharp,
+  MenuSharp,
+  LightModeOutlined,
+  DarkModeOutlined,
+} from "@vicons/material";
 
-defineProps<{
-  windowWidth: Number;
-}>();
+const store = useStore();
 
 const menuOptions: MenuOption[] = [
   {
@@ -65,6 +101,8 @@ const menuOptions: MenuOption[] = [
 defineComponent({
   DiamondSharp,
   MenuSharp,
+  LightModeOutlined,
+  DarkModeOutlined,
 });
 </script>
 
