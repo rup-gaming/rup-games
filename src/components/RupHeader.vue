@@ -9,7 +9,7 @@
     <div class="links">
       <n-menu mode="horizontal" :options="menuOptions" />
     </div>
-    <n-icon size="30">
+    <n-icon size="30" v-if="windowWidth < 600">
       <menu-sharp />
     </n-icon>
   </n-layout-header>
@@ -21,6 +21,10 @@ import { RouterLink } from "vue-router";
 import { NLayoutHeader, NIcon, NH3, NMenu } from "naive-ui";
 import type { MenuOption } from "naive-ui";
 import { DiamondSharp, MenuSharp } from "@vicons/material";
+
+defineProps<{
+  windowWidth: Number;
+}>();
 
 const menuOptions: MenuOption[] = [
   {
