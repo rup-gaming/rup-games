@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme">
+  <n-config-provider :theme="store.darkMode ? darkTheme : lightTheme">
     <n-layout style="height: 100vh">
       <rup-header> </rup-header>
       <rup-content> </rup-content>
@@ -9,11 +9,18 @@
 
 <script setup lang="ts">
 import { defineComponent } from "vue";
+import { useStore } from "./store/store";
 import { darkTheme, lightTheme, NConfigProvider, NLayout } from "naive-ui";
 import { RupHeader, RupContent } from "./components";
+
+const store = useStore();
+
+onresize = store.setWindowWidth;
 
 defineComponent({
   darkTheme,
   lightTheme,
+  RupHeader,
+  RupContent,
 });
 </script>
