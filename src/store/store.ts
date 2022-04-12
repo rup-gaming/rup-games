@@ -1,8 +1,29 @@
 import { defineStore } from "pinia";
 
+interface UserDataValues {
+  id: string;
+  email: string;
+  username?: string;
+  website?: string;
+  avatar_url?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export const useStore = defineStore("main", {
   state: () => {
-    return { windowWidth: "", darkMode: false };
+    return {
+      windowWidth: "",
+      darkMode: false,
+      user: {
+        id: "",
+        email: "",
+        username: "",
+        website: "",
+        created_at: "",
+        updated_at: "",
+      },
+    };
   },
   actions: {
     setDarkMode(isDark: boolean) {
@@ -20,6 +41,9 @@ export const useStore = defineStore("main", {
       } else {
         this.windowWidth = "xl";
       }
+    },
+    setUser(userData: UserDataValues) {
+      this.user = { ...this.user, ...userData };
     },
   },
 });
