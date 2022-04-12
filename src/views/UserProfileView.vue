@@ -31,10 +31,12 @@
 </template>
 
 <script setup lang="ts">
-import { supabase } from "../supabase";
-import { useStore } from "../store/store";
 import { onMounted, ref } from "vue";
+import { supabase } from "../supabase";
+import { useMessage } from "naive-ui";
+import { useStore } from "../store/store";
 
+const message = useMessage();
 const store = useStore();
 
 const loading = ref(true);
@@ -71,7 +73,7 @@ async function getProfile() {
       avatar_url.value = data.avatar_url;
     }
   } catch (error: any) {
-    alert(error.message);
+    message.error(error.message);
   } finally {
     loading.value = false;
   }
@@ -105,7 +107,7 @@ async function updateProfile() {
 
     if (error) throw error;
   } catch (error: any) {
-    alert(error.message);
+    message.error(error.message);
   } finally {
     loading.value = false;
   }
