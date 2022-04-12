@@ -1,11 +1,11 @@
 <template>
-  <form class="form-widget" @submit.prevent="updateProfile">
+  <form @submit.prevent="updateProfile">
     <div>
       <label for="email">Email</label>
       <input id="email" type="text" :value="store.user.email" disabled />
     </div>
     <div>
-      <label for="username">Name</label>
+      <label for="username">Username</label>
       <input id="username" type="text" v-model="username" />
     </div>
     <div>
@@ -16,16 +16,13 @@
     <div>
       <input
         type="submit"
-        class="button block primary"
         :value="loading ? 'Loading ...' : 'Update'"
         :disabled="loading"
       />
     </div>
 
     <div>
-      <button class="button block" @click="signOut" :disabled="loading">
-        Sign Out
-      </button>
+      <button @click="signOut" :disabled="loading">Sign Out</button>
     </div>
   </form>
 </template>
@@ -34,10 +31,12 @@
 import { onMounted, ref } from "vue";
 import { supabase } from "../supabase";
 import { useMessage } from "naive-ui";
+import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 
 const message = useMessage();
 const store = useStore();
+const router = useRouter();
 
 const loading = ref(true);
 const username = ref("");
@@ -50,14 +49,13 @@ async function getProfile() {
     const user: any = supabase.auth.user();
     store.setUser({
       id: user.id,
-      username: user.username,
+      username: user.username || "",
       email: user.email,
-      website: user.website,
+      website: user.website || "",
       avatar_url: user.avatar_url || "",
       created_at: user.created_at,
       updated_at: user.updated_at,
     });
-    console.log(user);
 
     let { data, error, status } = await supabase
       .from("profiles")
@@ -85,10 +83,10 @@ async function updateProfile() {
     const user: any = supabase.auth.user();
     store.setUser({
       id: user.id,
-      username: user.username,
+      username: user.username || "",
       email: user.email,
-      website: user.website,
-      avatar_url: user.avatar_url,
+      website: user.website || "",
+      avatar_url: user.avatar_url || "",
       created_at: user.created_at,
       updated_at: user.updated_at,
     });
@@ -102,10 +100,11 @@ async function updateProfile() {
     };
 
     let { error } = await supabase.from("profiles").upsert(updates, {
-      returning: "minimal", // Don't return the value after inserting
+      returning: "minimal",
     });
 
     if (error) throw error;
+    message.success("Successfully Updated Profile!");
   } catch (error: any) {
     message.error(error.message);
   } finally {
@@ -118,8 +117,10 @@ async function signOut() {
     loading.value = true;
     let { error } = await supabase.auth.signOut();
     if (error) throw error;
+    message.success("Successfully Signed Out!");
+    router.push("/");
   } catch (error: any) {
-    alert(error.message);
+    message.error(error.message);
   } finally {
     loading.value = false;
   }
