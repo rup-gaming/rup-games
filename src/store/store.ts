@@ -4,7 +4,6 @@ interface UserDataValues {
   id: string;
   email: string;
   username?: string;
-  website?: string;
   avatar_url?: string;
   created_at?: string;
   updated_at?: string;
@@ -19,7 +18,7 @@ export const useStore = defineStore("main", {
         id: "",
         email: "",
         username: "",
-        website: "",
+        avatar_url: "",
         created_at: "",
         updated_at: "",
       },
@@ -43,7 +42,15 @@ export const useStore = defineStore("main", {
       }
     },
     setUser(userData: UserDataValues) {
-      this.user = { ...this.user, ...userData };
+      const newData: UserDataValues = {
+        id: userData.id,
+        email: userData.email,
+        username: userData.username,
+        avatar_url: userData.avatar_url,
+        created_at: userData.created_at,
+        updated_at: userData.created_at,
+      };
+      this.user = { ...this.user, ...newData };
     },
   },
 });

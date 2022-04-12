@@ -8,10 +8,6 @@
       <label for="username">Username</label>
       <input id="username" type="text" v-model="username" />
     </div>
-    <div>
-      <label for="website">Website</label>
-      <input id="website" type="website" v-model="website" />
-    </div>
 
     <div>
       <input
@@ -40,7 +36,6 @@ const router = useRouter();
 
 const loading = ref(true);
 const username = ref("");
-const website = ref("");
 const avatar_url = ref("");
 
 async function getProfile() {
@@ -49,9 +44,7 @@ async function getProfile() {
     const user: any = supabase.auth.user();
     store.setUser({
       id: user.id,
-      username: user.username || "",
       email: user.email,
-      website: user.website || "",
       avatar_url: user.avatar_url || "",
       created_at: user.created_at,
       updated_at: user.updated_at,
@@ -59,7 +52,7 @@ async function getProfile() {
 
     let { data, error, status } = await supabase
       .from("profiles")
-      .select(`username, website, avatar_url`)
+      .select(`username, avatar_url`)
       .eq("id", store.user.id)
       .single();
 
@@ -67,7 +60,6 @@ async function getProfile() {
 
     if (data) {
       username.value = data.username;
-      website.value = data.website;
       avatar_url.value = data.avatar_url;
     }
   } catch (error: any) {
@@ -85,7 +77,6 @@ async function updateProfile() {
       id: user.id,
       username: user.username || "",
       email: user.email,
-      website: user.website || "",
       avatar_url: user.avatar_url || "",
       created_at: user.created_at,
       updated_at: user.updated_at,
@@ -94,7 +85,6 @@ async function updateProfile() {
     const updates = {
       id: store.user.id,
       username: username.value,
-      website: website.value,
       avatar_url: avatar_url.value,
       updated_at: new Date(),
     };
