@@ -1,37 +1,36 @@
 <template>
-  <form @submit.prevent="updateProfile">
+  <n-form class="profile-form">
     <profile-avatar
       v-model:path="avatar_url"
       @upload="updateProfile"
     ></profile-avatar>
 
     <div>
-      <label for="email">Email</label>
-      <input id="email" type="text" :value="store.user.email" disabled />
-    </div>
-    <div>
-      <label for="username">Username</label>
-      <input id="username" type="text" v-model="username" />
+      <n-form-item label="Email">
+        <n-input v-model:value="store.user.email" :disabled="true" />
+      </n-form-item>
+
+      <n-form-item path="username" label="Username">
+        <n-input v-model:value="username" @keydown.enter.prevent />
+      </n-form-item>
     </div>
 
-    <div>
-      <input
-        type="submit"
-        :value="loading ? 'Loading ...' : 'Update'"
+    <n-form-item>
+      <n-button
         :disabled="loading"
-      />
-    </div>
-
-    <div>
-      <button @click="signOut" :disabled="loading">Sign Out</button>
-    </div>
-  </form>
+        :loading="loading"
+        @click.prevent="updateProfile"
+      >
+        {{ loading ? "Updating" : "Update" }}
+      </n-button>
+    </n-form-item>
+  </n-form>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { supabase } from "../supabase";
-import { useMessage } from "naive-ui";
+import { useMessage, NForm, NFormItem, NInput, NButton } from "naive-ui";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 import { ProfileAvatar } from "../components";
@@ -39,7 +38,6 @@ import { ProfileAvatar } from "../components";
 const message = useMessage();
 const store = useStore();
 const router = useRouter();
-
 const loading = ref(true);
 const username = ref("");
 const avatar_url = ref("");
@@ -95,20 +93,6 @@ async function updateProfile() {
   }
 }
 
-async function signOut() {
-  try {
-    loading.value = true;
-    let { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    message.success("Successfully Signed Out!");
-    router.push("/");
-  } catch (error: any) {
-    message.error(error.message);
-  } finally {
-    loading.value = false;
-  }
-}
-
 defineExpose({
   avatar_url,
 });
@@ -117,3 +101,13 @@ onMounted(() => {
   getProfile();
 });
 </script>
+
+<style scoped>
+.profile-form {
+  display: flex;
+  flex-flow: row wrap;
+  align-self: center;
+  justify-self: center;
+  justify-content: center;
+}
+</style>
