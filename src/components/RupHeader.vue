@@ -1,5 +1,5 @@
 <template>
-  <n-layout-header bordered>
+  <n-layout-header bordered class="header">
     <div class="side-container-left">
       <router-link to="/" style="text-decoration: none; height: 30px">
         <n-button text :focusable="false">

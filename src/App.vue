@@ -1,10 +1,12 @@
 <template>
-  <n-config-provider :theme="store.darkMode ? darkTheme : lightTheme">
+  <n-config-provider
+    class="app-wrapper"
+    :theme="store.darkMode ? darkTheme : lightTheme"
+  >
     <n-message-provider :duration="6000" :closable="true">
-      <n-layout style="height: 100vh">
-        <rup-header> </rup-header>
-        <rup-content> </rup-content>
-      </n-layout>
+      <rup-header> </rup-header>
+      <rup-content> </rup-content>
+      <rup-footer> </rup-footer>
     </n-message-provider>
   </n-config-provider>
 </template>
@@ -18,9 +20,8 @@ import {
   lightTheme,
   NConfigProvider,
   NMessageProvider,
-  NLayout,
 } from "naive-ui";
-import { RupHeader, RupContent } from "./components";
+import { RupHeader, RupContent, RupFooter } from "./components";
 
 const store = useStore();
 
@@ -38,7 +39,5 @@ supabase.auth.onAuthStateChange(async (_, session: any) => {
 defineComponent({
   darkTheme,
   lightTheme,
-  RupHeader,
-  RupContent,
 });
 </script>

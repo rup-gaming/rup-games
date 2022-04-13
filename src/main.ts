@@ -7,6 +7,8 @@ import router from "./navigation/router";
 import "vfonts/Lato.css";
 // Monospace Font
 import "vfonts/FiraCode.css";
+// Custom CSS
+import "./main.css";
 
 const pinia = createPinia();
 const vueApp = createApp(App);
