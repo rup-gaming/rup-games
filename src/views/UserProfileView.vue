@@ -1,5 +1,10 @@
 <template>
   <form @submit.prevent="updateProfile">
+    <profile-avatar
+      v-model:path="avatar_url"
+      @upload="updateProfile"
+    ></profile-avatar>
+
     <div>
       <label for="email">Email</label>
       <input id="email" type="text" :value="store.user.email" disabled />
@@ -29,6 +34,7 @@ import { supabase } from "../supabase";
 import { useMessage } from "naive-ui";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
+import { ProfileAvatar } from "../components";
 
 const message = useMessage();
 const store = useStore();
@@ -42,13 +48,7 @@ async function getProfile() {
   try {
     loading.value = true;
     const user: any = supabase.auth.user();
-    store.setUser({
-      id: user.id,
-      email: user.email,
-      avatar_url: user.avatar_url || "",
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    });
+    store.setUser(user);
 
     let { data, error, status } = await supabase
       .from("profiles")
@@ -73,14 +73,7 @@ async function updateProfile() {
   try {
     loading.value = true;
     const user: any = supabase.auth.user();
-    store.setUser({
-      id: user.id,
-      username: user.username || "",
-      email: user.email,
-      avatar_url: user.avatar_url || "",
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    });
+    store.setUser(user);
 
     const updates = {
       id: store.user.id,
@@ -115,6 +108,10 @@ async function signOut() {
     loading.value = false;
   }
 }
+
+defineExpose({
+  avatar_url,
+});
 
 onMounted(() => {
   getProfile();
