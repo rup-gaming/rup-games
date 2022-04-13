@@ -1,31 +1,61 @@
 <template>
-  <div>
-    <img
-      v-if="src"
-      :src="src"
-      alt="Avatar"
-      :style="{ height: size, width: size }"
-    />
-    <div v-else :style="{ height: size, width: size }" />
-
-    <div :style="{ width: size }">
-      <label class="button primary block" for="single">
-        {{ uploading ? "Uploading ..." : "Upload" }}
-      </label>
-      <input
-        style="visibility: hidden; position: absolute"
-        type="file"
-        id="single"
-        accept="image/*"
-        @change="uploadAvatar"
-        :disabled="uploading"
+  <div class="avatar-container">
+    <div
+      class="avatar-img-container"
+      :style="{
+        height: size,
+        width: size,
+        'border-color': store.darkMode ? '#3c3f41fd' : '#e0e0e6',
+      }"
+    >
+      <img
+        v-if="src"
+        :src="src"
+        alt="Avatar"
+        :style="{
+          height: size,
+          width: size,
+        }"
+        class="avatar-img"
       />
+      <div
+        v-else
+        :style="{
+          height: size,
+          width: size,
+          display: 'flex',
+          'justify-content': 'center',
+          'align-items': 'center',
+        }"
+        class="avatar"
+      >
+        <span>Could not load image :(</span>
+      </div>
     </div>
+
+    <n-upload
+      type="file"
+      accept="image/*"
+      @on-change="uploadAvatar"
+      class="upload-container"
+    >
+      <n-button
+        size="large"
+        :disabled="uploading"
+        :loading="uploading"
+        icon-placement="left"
+        style="width: 178px"
+      >
+        {{ uploading ? "Uploading" : "Upload" }}
+      </n-button>
+    </n-upload>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
+import { NButton, NUpload } from "naive-ui";
+import { useStore } from "../store/store";
 import { supabase } from "../supabase";
 
 const props = defineProps<{
@@ -36,8 +66,9 @@ const emit = defineEmits<{
   (e: "update:path", value: string): void;
 }>();
 
+const store = useStore();
 const { path } = toRefs(props);
-const size = ref("10em");
+const size = ref("10rem");
 const uploading = ref(false);
 const src = ref("");
 const files = ref();
@@ -87,3 +118,31 @@ watch(path, () => {
   if (path.value) downloadImage();
 });
 </script>
+
+<style scoped>
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.avatar-img {
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.avatar-img-container {
+  padding: 0.5rem;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.upload-container {
+  width: 178px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0rem 0.5rem 0rem;
+}
+</style>
