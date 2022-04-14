@@ -33,28 +33,33 @@
       </div>
     </div>
 
-    <n-upload
-      type="file"
-      accept="image/*"
-      @on-change="uploadAvatar"
-      class="upload-container"
-    >
+    <div class="upload-container">
       <n-button
         size="large"
         :disabled="uploading"
         :loading="uploading"
         icon-placement="left"
-        style="width: 178px"
+        style="width: 178px; padding: 0px"
       >
-        {{ uploading ? "Uploading" : "Upload" }}
+        <label class="upload-label" for="single">
+          {{ uploading ? "Uploading ..." : "Upload" }}
+        </label>
+        <input
+          style="visibility: hidden; position: absolute"
+          type="file"
+          id="single"
+          accept="image/*"
+          @change="uploadAvatar"
+          :disabled="uploading"
+        />
       </n-button>
-    </n-upload>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
-import { NButton, NUpload } from "naive-ui";
+import { NButton } from "naive-ui";
 import { useStore } from "../store/store";
 import { supabase } from "../supabase";
 
@@ -80,8 +85,8 @@ const downloadImage = async () => {
       .from("avatars")
       .download(copyPath);
     if (error) throw error;
-    const thing: any = data;
-    src.value = URL.createObjectURL(thing);
+    const copyOfData: any = data;
+    src.value = URL.createObjectURL(copyOfData);
   } catch (error: any) {
     console.error("Error downloading image: ", error.message);
   }
@@ -144,5 +149,15 @@ watch(path, () => {
   align-items: center;
   justify-content: center;
   padding: 0.5rem 0rem 0.5rem 0rem;
+}
+
+.upload-label {
+  width: 178px;
+  padding-top: 12.5px;
+  padding-bottom: 12.5px;
+}
+
+.upload-label:hover {
+  cursor: pointer;
 }
 </style>
