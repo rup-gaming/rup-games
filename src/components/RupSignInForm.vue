@@ -9,7 +9,7 @@
       class="sign-in-form"
     >
       <n-form-item label="Email" path="email">
-        <n-input v-model:value="email" placeholder="Input Email" />
+        <n-input v-model:value="formValues.email" placeholder="Input Email" />
       </n-form-item>
 
       <n-button
@@ -54,7 +54,6 @@ import {
 import { supabase } from "../supabase";
 
 const loading = ref(false);
-const email = ref("");
 const message = useMessage();
 const showModal = ref(false);
 const signInForm = ref<FormInst | null>(null);
@@ -71,16 +70,18 @@ const rules = ref({
   email: {
     required: true,
     message: "Please input your email",
-    trigger: "blur",
+    trigger: ["input", "blur"],
   },
 });
 
 const handleLogin = async () => {
   try {
     loading.value = true;
-    const { error } = await supabase.auth.signIn({ email: email.value });
+    const { error } = await supabase.auth.signIn({
+      email: formValues.value.email,
+    });
     if (error) throw error;
-    message.success("Check your email for the login link!");
+    message.success("Check your email for the sign-in link!");
   } catch (error: any) {
     message.error(error.error_description || error.message);
   } finally {
