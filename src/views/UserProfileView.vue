@@ -8,7 +8,7 @@
       @upload="updateProfile"
     ></profile-avatar>
 
-    <div class="form-input-group" style="margin-top: 30px">
+    <div class="form-input-group">
       <n-form-item label="Email">
         <n-input v-model:value="store.user.email" :disabled="true" />
       </n-form-item>
@@ -18,15 +18,14 @@
       </n-form-item>
     </div>
 
-    <n-form-item>
-      <n-button
-        :disabled="loading"
-        :loading="loading"
-        @click.prevent="updateProfile"
-      >
-        {{ loading ? "Updating" : "Update" }}
-      </n-button>
-    </n-form-item>
+    <n-button
+      size="large"
+      :disabled="loading"
+      :loading="loading"
+      @click.prevent="updateProfile"
+    >
+      {{ loading ? "Updating" : "Update Profile" }}
+    </n-button>
   </n-form>
 </template>
 
@@ -118,9 +117,10 @@ onMounted(() => {
 .form-input-group {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   flex-direction: column;
   max-width: 500px;
+  margin-top: 24px;
 }
 
 .n-form-item {

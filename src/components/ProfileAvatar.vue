@@ -42,7 +42,7 @@
         style="width: 178px; padding: 0px"
       >
         <label class="upload-label" for="single">
-          {{ uploading ? "Uploading ..." : "Upload" }}
+          {{ uploading ? "Uploading ..." : "Change Avatar" }}
         </label>
         <input
           style="visibility: hidden; position: absolute"
