@@ -1,16 +1,19 @@
 <template>
-  <n-form class="profile-form">
+  <n-form
+    class="profile-form"
+    :style="store.windowWidth === 'xs' ? 'width: 260px;' : 'width: 320px;'"
+  >
     <profile-avatar
       v-model:path="avatar_url"
       @upload="updateProfile"
     ></profile-avatar>
 
-    <div>
+    <div class="form-input-group" style="margin-top: 30px">
       <n-form-item label="Email">
         <n-input v-model:value="store.user.email" :disabled="true" />
       </n-form-item>
 
-      <n-form-item path="username" label="Username">
+      <n-form-item path="username" label="Username" placeholder="">
         <n-input v-model:value="username" @keydown.enter.prevent />
       </n-form-item>
     </div>
@@ -105,9 +108,22 @@ onMounted(() => {
 <style scoped>
 .profile-form {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column wrap;
   align-self: center;
   justify-self: center;
   justify-content: center;
+  flex: auto;
+}
+
+.form-input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  max-width: 500px;
+}
+
+.n-form-item {
+  width: 100%;
 }
 </style>

@@ -6,7 +6,6 @@
     <n-message-provider :duration="6000" :closable="true">
       <rup-header> </rup-header>
       <rup-content> </rup-content>
-      <rup-footer> </rup-footer>
     </n-message-provider>
   </n-config-provider>
 </template>
@@ -21,7 +20,7 @@ import {
   NConfigProvider,
   NMessageProvider,
 } from "naive-ui";
-import { RupHeader, RupContent, RupFooter } from "./components";
+import { RupHeader, RupContent } from "./components";
 
 const store = useStore();
 
@@ -41,3 +40,12 @@ defineComponent({
   lightTheme,
 });
 </script>
+
+<style scoped>
+.app-wrapper {
+  height: 100vh;
+  display: flex;
+  margin: 0px;
+  flex-direction: column;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <n-layout-header bordered class="header">
+  <n-layout-header bordered>
     <div class="side-container-left">
       <router-link to="/" style="text-decoration: none; height: 30px">
         <n-button text :focusable="false">
@@ -237,6 +237,7 @@ defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: fixed;
 }
 
 .drawer-theme-btn-container {
