@@ -1,30 +1,71 @@
 <template>
-  <n-form inline :rules="rules" size="large">
-    <n-form-item label="Email" path="email">
-      <n-input v-model:value="email" placeholder="Input Email" />
-    </n-form-item>
+  <div>
+    <n-form
+      ref="signInForm"
+      :model="formValues"
+      inline
+      :rules="rules"
+      size="large"
+      class="sign-in-form"
+    >
+      <n-form-item label="Email" path="email">
+        <n-input v-model:value="email" placeholder="Input Email" />
+      </n-form-item>
 
-    <n-form-item>
       <n-button
         type="primary"
-        @click.prevent="handleLogin"
+        @click.prevent="showModal = true"
         :loading="loading"
         :disabled="loading"
       >
         Send Login Link
       </n-button>
-    </n-form-item>
-  </n-form>
+
+      <n-modal
+        v-model:show="showModal"
+        :mask-closable="false"
+        preset="dialog"
+        title="Confirmation"
+        content="
+        If confirmed, an email will be sent to the provided address to sign in.
+        If this is your first time, clicking the 'Sign In' button in the email
+        will register you as a new user.
+        "
+        positive-text="Confirm"
+        negative-text="Cancel"
+        @positive-click="handleLogin"
+        @negative-click="onNegativeClick"
+      />
+    </n-form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { NForm, NFormItem, NInput, NButton, useMessage } from "naive-ui";
+import {
+  NForm,
+  FormInst,
+  NFormItem,
+  NInput,
+  NButton,
+  NModal,
+  useMessage,
+} from "naive-ui";
 import { supabase } from "../supabase";
 
 const loading = ref(false);
 const email = ref("");
 const message = useMessage();
+const showModal = ref(false);
+const signInForm = ref<FormInst | null>(null);
+
+const formValues = ref({
+  email: "",
+});
+
+const onNegativeClick = () => {
+  showModal.value = false;
+};
 
 const rules = ref({
   email: {
@@ -47,3 +88,9 @@ const handleLogin = async () => {
   }
 };
 </script>
+
+<style scoped>
+.sign-in-form {
+  flex-direction: column;
+}
+</style>
