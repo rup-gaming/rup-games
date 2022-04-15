@@ -32,7 +32,21 @@ supabase.auth.onAuthStateChange(async (_, session: any) => {
   store.setUser({
     ...user,
     ...data,
+    isSignedIn: localStorage.getItem("supabase.auth.token") ? true : false,
   });
+  try {
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .download(store.user.avatar_url);
+    if (error) throw error;
+    const copyOfData: any = data;
+    store.setUser({
+      ...store.user,
+      avatar_url: URL.createObjectURL(copyOfData),
+    });
+  } catch (error: any) {
+    console.error("Error downloading image: ", error.message);
+  }
 });
 
 defineComponent({

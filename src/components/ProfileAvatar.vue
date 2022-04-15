@@ -87,6 +87,7 @@ const downloadImage = async () => {
     if (error) throw error;
     const copyOfData: any = data;
     src.value = URL.createObjectURL(copyOfData);
+    store.setUser({ ...store.user, avatar_url: src.value });
   } catch (error: any) {
     console.error("Error downloading image: ", error.message);
   }

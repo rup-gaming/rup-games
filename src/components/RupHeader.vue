@@ -23,49 +23,54 @@
     </div>
 
     <div class="side-container-right">
-      <n-button
-        class="side-container-item"
-        text
-        tag="a"
-        href="https://github.com/waylonturbes/square-game"
-        target="_blank"
-        :focusable="false"
+      <div
+        class="side-container-right-desktop"
         v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
       >
-        GitHub
-      </n-button>
+        <n-button
+          class="side-container-item"
+          text
+          tag="a"
+          href="https://github.com/waylonturbes/square-game"
+          target="_blank"
+          :focusable="false"
+        >
+          GitHub
+        </n-button>
 
-      <n-button
-        text
-        style="margin-left: 20px"
-        @click="disableDarkMode(true)"
-        type="default"
-        v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
-        v-if="!store.darkMode"
-      >
-        <template #icon>
-          <n-icon size="20">
-            <dark-mode-outlined />
-          </n-icon>
-        </template>
-        Dark
-      </n-button>
+        <n-button
+          class="side-container-item"
+          text
+          style="margin-left: 0px"
+          @click="disableDarkMode(store.darkMode === true ? false : true)"
+          type="default"
+        >
+          <template #icon>
+            <n-icon size="20">
+              <light-mode-outlined v-if="store.darkMode === false" />
+              <dark-mode-outlined v-else />
+            </n-icon>
+          </template>
+          {{ store.darkMode === true ? "Dark" : "Light" }}
+        </n-button>
 
-      <n-button
-        text
-        style="margin-left: 20px"
-        @click="disableDarkMode(false)"
-        type="default"
-        v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
-        v-else
-      >
-        <template #icon>
-          <n-icon size="20">
-            <light-mode-outlined />
-          </n-icon>
-        </template>
-        Light
-      </n-button>
+        <div style="padding-left: 20px; display: flex; align-items: center">
+          <n-dropdown
+            v-if="store.user.isSignedIn"
+            trigger="click"
+            :options="profileOptions"
+            @select="handleProfileSelect"
+          >
+            <n-button style="padding: 0px; height: 40px">
+              <n-avatar size="large" :src="store.user.avatar_url"> </n-avatar>
+            </n-button>
+          </n-dropdown>
+
+          <n-button v-else :focusable="false" @click.prevent="goToSignIn">
+            Sign In
+          </n-button>
+        </div>
+      </div>
 
       <n-button
         text
@@ -78,6 +83,7 @@
         </n-icon>
       </n-button>
     </div>
+
     <n-drawer v-model:show="showDrawer" :width="240" placement="right">
       <n-drawer-content>
         <n-menu
@@ -85,35 +91,20 @@
           mode="vertical"
           :options="appNavigation"
         />
-        <div class="drawer-theme-btn-container">
+        <div class="drawer-custom-btn-container">
           <n-button
             ghost
-            class="drawer-theme-btn"
-            @click="disableDarkMode(true)"
+            class="drawer-custom-btn"
+            @click="disableDarkMode(store.darkMode === true ? false : true)"
             type="default"
-            v-if="!store.darkMode"
           >
             <template #icon>
               <n-icon size="20">
-                <dark-mode-outlined />
+                <light-mode-outlined v-if="store.darkMode === false" />
+                <dark-mode-outlined v-else />
               </n-icon>
             </template>
-            Dark
-          </n-button>
-
-          <n-button
-            ghost
-            class="drawer-theme-btn"
-            @click="disableDarkMode(false)"
-            type="default"
-            v-else
-          >
-            <template #icon>
-              <n-icon size="20">
-                <light-mode-outlined />
-              </n-icon>
-            </template>
-            Light
+            {{ store.darkMode === true ? "Dark" : "Light" }}
           </n-button>
         </div>
       </n-drawer-content>
@@ -122,8 +113,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, h, ref } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { defineComponent, h, ref, onMounted } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
+import { supabase } from "../supabase";
 import {
   NLayoutHeader,
   NIcon,
@@ -132,6 +124,9 @@ import {
   NButton,
   NDrawer,
   NDrawerContent,
+  NAvatar,
+  useMessage,
+  NDropdown,
 } from "naive-ui";
 import type { MenuOption } from "naive-ui";
 import { useStore } from "../store/store";
@@ -144,16 +139,37 @@ import {
 
 const store = useStore();
 const currentRoute = useRoute();
+const router = useRouter();
+const message = useMessage();
 
 const showDrawer = ref(false);
+const src = ref("");
 
-function disableDarkMode(isDark: boolean) {
+const disableDarkMode = (isDark: boolean) => {
   store.setDarkMode(isDark);
-}
+};
 
-function activateDrawer() {
+const activateDrawer = () => {
   showDrawer.value = !showDrawer.value;
-}
+};
+
+const handleProfileSelect = async (key: string | number) => {
+  if (String(key) === "profile") {
+    router.push("/profile");
+  } else {
+    let { error } = await supabase.auth.signOut();
+    if (error) {
+      message.error(
+        "Failed to sign out! If issue persists, delete your token in localStorage"
+      );
+    }
+    router.push("/");
+  }
+};
+
+const goToSignIn = () => {
+  router.push("/signin");
+};
 
 const appNavigation: MenuOption[] = [
   {
@@ -195,6 +211,17 @@ const appNavigation: MenuOption[] = [
   },
 ];
 
+const profileOptions = [
+  {
+    label: "Profile",
+    key: "profile",
+  },
+  {
+    label: "Sign Out",
+    key: "sign-out",
+  },
+];
+
 defineComponent({
   DiamondSharp,
   MenuSharp,
@@ -209,28 +236,22 @@ defineComponent({
   display: flex;
   align-items: center;
 }
-
 .side-container-right {
   display: flex;
   align-items: center;
 }
-
 .side-container-item {
   padding: 0px 20px;
 }
-
 .logo {
   margin-right: 6px;
 }
-
 .title {
   margin: 0px;
 }
-
 .menu {
   flex: auto;
 }
-
 .n-layout-header {
   height: 64px;
   padding: 0px 24px 0px 24px;
@@ -239,15 +260,17 @@ defineComponent({
   justify-content: space-between;
   position: fixed;
 }
-
-.drawer-theme-btn-container {
+.side-container-right-desktop {
+  display: flex;
+  align-items: center;
+}
+.drawer-custom-btn-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-
-.drawer-theme-btn {
+.drawer-custom-btn {
   width: 176px;
   height: 42px;
 }

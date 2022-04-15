@@ -77,7 +77,7 @@ async function getProfile() {
   try {
     loading.value = true;
     const user: any = supabase.auth.user();
-    store.setUser(user);
+    store.setUser({ ...store.user, ...user });
 
     let { data, error, status } = await supabase
       .from("profiles")
