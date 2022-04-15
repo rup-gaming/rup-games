@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2>Sign in with an email</h2>
     <n-form
       ref="signInForm"
       :model="formValues"
@@ -9,7 +10,10 @@
       class="sign-in-form"
     >
       <n-form-item label="Email" path="email">
-        <n-input v-model:value="formValues.email" placeholder="Input Email" />
+        <n-input
+          v-model:value="formValues.email"
+          placeholder="Input your email"
+        />
       </n-form-item>
 
       <n-button
@@ -18,7 +22,7 @@
         :loading="loading"
         :disabled="loading"
       >
-        Send Login Link
+        Send Sign-in Link
       </n-button>
 
       <n-modal
