@@ -56,14 +56,19 @@
 
         <div style="padding-left: 20px; display: flex; align-items: center">
           <n-dropdown
+            v-if="store.user.isSignedIn"
             trigger="click"
             :options="profileOptions"
-            @select="handleSelect"
+            @select="handleProfileSelect"
           >
             <n-button style="padding: 0px; height: 40px">
               <n-avatar size="large" :src="store.user.avatar_url"> </n-avatar>
             </n-button>
           </n-dropdown>
+
+          <n-button v-else :focusable="false" @click.prevent="goToSignIn">
+            Sign In
+          </n-button>
         </div>
       </div>
 
@@ -154,7 +159,6 @@ const message = useMessage();
 
 const showDrawer = ref(false);
 const src = ref("");
-const showDropdown = ref(false);
 
 const downloadImage = async () => {
   try {
@@ -169,15 +173,15 @@ const downloadImage = async () => {
   }
 };
 
-function disableDarkMode(isDark: boolean) {
+const disableDarkMode = (isDark: boolean) => {
   store.setDarkMode(isDark);
-}
+};
 
-function activateDrawer() {
+const activateDrawer = () => {
   showDrawer.value = !showDrawer.value;
-}
+};
 
-async function handleSelect(key: string | number) {
+const handleProfileSelect = async (key: string | number) => {
   if (String(key) === "profile") {
     router.push("/profile");
   } else {
@@ -189,7 +193,11 @@ async function handleSelect(key: string | number) {
     }
     router.push("/");
   }
-}
+};
+
+const goToSignIn = () => {
+  router.push("/signin");
+};
 
 const appNavigation: MenuOption[] = [
   {
@@ -245,7 +253,9 @@ const profileOptions = [
 // const copyAvatarURL: any = store.user.avatar_url;
 
 onMounted(() => {
-  downloadImage();
+  if (store.user.isSignedIn) {
+    downloadImage();
+  }
 });
 
 defineComponent({
