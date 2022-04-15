@@ -23,33 +23,43 @@
     </div>
 
     <div class="side-container-right">
-      <n-button
-        class="side-container-item"
-        text
-        tag="a"
-        href="https://github.com/waylonturbes/square-game"
-        target="_blank"
-        :focusable="false"
+      <div
+        class="side-container-right-desktop"
         v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
       >
-        GitHub
-      </n-button>
+        <n-button
+          class="side-container-item"
+          text
+          tag="a"
+          href="https://github.com/waylonturbes/square-game"
+          target="_blank"
+          :focusable="false"
+        >
+          GitHub
+        </n-button>
 
-      <n-button
-        text
-        style="margin-left: 20px"
-        @click="disableDarkMode(store.darkMode === true ? false : true)"
-        type="default"
-        v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
-      >
-        <template #icon>
-          <n-icon size="20">
-            <light-mode-outlined v-if="store.darkMode === false" />
-            <dark-mode-outlined v-else />
-          </n-icon>
-        </template>
-        {{ store.darkMode === true ? "Dark" : "Light" }}
-      </n-button>
+        <n-button
+          class="side-container-item"
+          text
+          style="margin-left: 0px"
+          @click="disableDarkMode(store.darkMode === true ? false : true)"
+          type="default"
+        >
+          <template #icon>
+            <n-icon size="20">
+              <light-mode-outlined v-if="store.darkMode === false" />
+              <dark-mode-outlined v-else />
+            </n-icon>
+          </template>
+          {{ store.darkMode === true ? "Dark" : "Light" }}
+        </n-button>
+
+        <div style="padding-left: 20px; display: flex; align-items: center">
+          <n-button style="padding: 0px; height: 40px">
+            <n-avatar size="large" :src="store.user.avatar_url"> </n-avatar>
+          </n-button>
+        </div>
+      </div>
 
       <n-button
         text
@@ -107,8 +117,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, h, ref } from "vue";
+import { defineComponent, h, ref, watch, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
+import { supabase } from "../supabase";
 import {
   NLayoutHeader,
   NIcon,
@@ -132,6 +143,20 @@ const store = useStore();
 const currentRoute = useRoute();
 
 const showDrawer = ref(false);
+const src = ref("");
+
+const downloadImage = async () => {
+  try {
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .download(store.user.avatar_url);
+    if (error) throw error;
+    const copyOfData: any = data;
+    src.value = URL.createObjectURL(copyOfData);
+  } catch (error: any) {
+    console.error("Error downloading image: ", error.message);
+  }
+};
 
 function disableDarkMode(isDark: boolean) {
   store.setDarkMode(isDark);
@@ -181,6 +206,12 @@ const appNavigation: MenuOption[] = [
   },
 ];
 
+// const copyAvatarURL: any = store.user.avatar_url;
+
+onMounted(() => {
+  downloadImage();
+});
+
 defineComponent({
   DiamondSharp,
   MenuSharp,
@@ -195,28 +226,22 @@ defineComponent({
   display: flex;
   align-items: center;
 }
-
 .side-container-right {
   display: flex;
   align-items: center;
 }
-
 .side-container-item {
   padding: 0px 20px;
 }
-
 .logo {
   margin-right: 6px;
 }
-
 .title {
   margin: 0px;
 }
-
 .menu {
   flex: auto;
 }
-
 .n-layout-header {
   height: 64px;
   padding: 0px 24px 0px 24px;
@@ -225,14 +250,16 @@ defineComponent({
   justify-content: space-between;
   position: fixed;
 }
-
+.side-container-right-desktop {
+  display: flex;
+  align-items: center;
+}
 .drawer-theme-btn-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-
 .drawer-theme-btn {
   width: 176px;
   height: 42px;
