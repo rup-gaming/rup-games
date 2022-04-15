@@ -38,33 +38,17 @@
       <n-button
         text
         style="margin-left: 20px"
-        @click="disableDarkMode(true)"
+        @click="disableDarkMode(store.darkMode === true ? false : true)"
         type="default"
         v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
-        v-if="!store.darkMode"
       >
         <template #icon>
           <n-icon size="20">
-            <dark-mode-outlined />
+            <light-mode-outlined v-if="store.darkMode === false" />
+            <dark-mode-outlined v-else />
           </n-icon>
         </template>
-        Dark
-      </n-button>
-
-      <n-button
-        text
-        style="margin-left: 20px"
-        @click="disableDarkMode(false)"
-        type="default"
-        v-show="store.windowWidth !== 'xs' && store.windowWidth !== 'sm'"
-        v-else
-      >
-        <template #icon>
-          <n-icon size="20">
-            <light-mode-outlined />
-          </n-icon>
-        </template>
-        Light
+        {{ store.darkMode === true ? "Dark" : "Light" }}
       </n-button>
 
       <n-button
@@ -78,6 +62,7 @@
         </n-icon>
       </n-button>
     </div>
+
     <n-drawer v-model:show="showDrawer" :width="240" placement="right">
       <n-drawer-content>
         <n-menu
@@ -132,6 +117,7 @@ import {
   NButton,
   NDrawer,
   NDrawerContent,
+  NAvatar,
 } from "naive-ui";
 import type { MenuOption } from "naive-ui";
 import { useStore } from "../store/store";
