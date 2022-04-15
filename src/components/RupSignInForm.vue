@@ -9,7 +9,7 @@
       size="large"
       class="sign-in-form"
     >
-      <n-form-item label="Email" path="email">
+      <n-form-item label="Email" path="email" style="margin: 0px; width: 280px">
         <n-input
           v-model:value="formValues.email"
           placeholder="Input your email"
