@@ -91,35 +91,20 @@
           mode="vertical"
           :options="appNavigation"
         />
-        <div class="drawer-theme-btn-container">
+        <div class="drawer-custom-btn-container">
           <n-button
             ghost
-            class="drawer-theme-btn"
-            @click="disableDarkMode(true)"
+            class="drawer-custom-btn"
+            @click="disableDarkMode(store.darkMode === true ? false : true)"
             type="default"
-            v-if="!store.darkMode"
           >
             <template #icon>
               <n-icon size="20">
-                <dark-mode-outlined />
+                <light-mode-outlined v-if="store.darkMode === false" />
+                <dark-mode-outlined v-else />
               </n-icon>
             </template>
-            Dark
-          </n-button>
-
-          <n-button
-            ghost
-            class="drawer-theme-btn"
-            @click="disableDarkMode(false)"
-            type="default"
-            v-else
-          >
-            <template #icon>
-              <n-icon size="20">
-                <light-mode-outlined />
-              </n-icon>
-            </template>
-            Light
+            {{ store.darkMode === true ? "Dark" : "Light" }}
           </n-button>
         </div>
       </n-drawer-content>
@@ -279,13 +264,13 @@ defineComponent({
   display: flex;
   align-items: center;
 }
-.drawer-theme-btn-container {
+.drawer-custom-btn-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-.drawer-theme-btn {
+.drawer-custom-btn {
   width: 176px;
   height: 42px;
 }
