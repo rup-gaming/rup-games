@@ -83,7 +83,7 @@ const handleLogin = async () => {
     if (error) throw error;
     message.success("Check your email for the sign-in link!");
   } catch (error: any) {
-    message.error(error.error_description || error.message);
+    message.error("Please provide a valid email address.");
   } finally {
     loading.value = false;
   }

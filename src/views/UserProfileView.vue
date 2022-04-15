@@ -1,48 +1,77 @@
 <template>
-  <n-form
-    class="profile-form"
-    :style="store.windowWidth === 'xs' ? 'width: 260px;' : 'width: 320px;'"
-  >
-    <profile-avatar
-      v-model:path="avatar_url"
-      @upload="updateProfile"
-    ></profile-avatar>
-
-    <div class="form-input-group">
-      <n-form-item label="Email">
-        <n-input v-model:value="store.user.email" :disabled="true" />
-      </n-form-item>
-
-      <n-form-item path="username" label="Username" placeholder="">
-        <n-input v-model:value="username" @keydown.enter.prevent />
-      </n-form-item>
-    </div>
-
-    <n-button
+  <div class="profile-container">
+    <h2>Welcome {{ store.user.username || username }}</h2>
+    <n-form
+      class="profile-form"
+      :style="store.windowWidth === 'xs' ? 'width: 260px;' : 'width: 320px;'"
       size="large"
-      :disabled="loading"
-      :loading="loading"
-      @click.prevent="updateProfile"
     >
-      {{ loading ? "Updating" : "Update Profile" }}
-    </n-button>
-  </n-form>
+      <profile-avatar
+        v-model:path="avatar_url"
+        @upload="updateProfile"
+      ></profile-avatar>
+
+      <div class="form-input-group">
+        <n-form-item label="Email">
+          <n-input v-model:value="store.user.email" :disabled="true" />
+        </n-form-item>
+
+        <n-form-item path="username" label="Username" placeholder="">
+          <n-input v-model:value="username" @keydown.enter.prevent />
+        </n-form-item>
+      </div>
+
+      <n-button
+        size="large"
+        type="primary"
+        :disabled="loading"
+        :loading="loading"
+        @click.prevent="showModal = true"
+      >
+        {{ loading ? "Updating" : "Update Profile" }}
+      </n-button>
+
+      <n-modal
+        v-model:show="showModal"
+        :mask-closable="false"
+        preset="dialog"
+        title="Confirmation"
+        content="
+        Are you sure that you want to update your profile?
+        "
+        positive-text="Yes"
+        negative-text="No"
+        @positive-click="updateProfile"
+        @negative-click="onNegativeClick"
+      />
+    </n-form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { supabase } from "../supabase";
-import { useMessage, NForm, NFormItem, NInput, NButton } from "naive-ui";
-import { useRouter } from "vue-router";
+import {
+  useMessage,
+  NForm,
+  NFormItem,
+  NInput,
+  NButton,
+  NModal,
+} from "naive-ui";
 import { useStore } from "../store/store";
 import { ProfileAvatar } from "../components";
 
 const message = useMessage();
 const store = useStore();
-const router = useRouter();
+const showModal = ref(false);
 const loading = ref(true);
 const username = ref("");
 const avatar_url = ref("");
+
+const onNegativeClick = () => {
+  showModal.value = false;
+};
 
 async function getProfile() {
   try {
@@ -87,7 +116,7 @@ async function updateProfile() {
     });
 
     if (error) throw error;
-    message.success("Successfully Updated Profile!");
+    message.success("Successfully updated profile!");
   } catch (error: any) {
     message.error(error.message);
   } finally {
@@ -105,13 +134,21 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.profile-container {
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .profile-form {
   display: flex;
   flex-flow: column wrap;
   align-self: center;
   justify-self: center;
   justify-content: center;
-  flex: auto;
+  max-width: 500px;
 }
 
 .form-input-group {
@@ -119,7 +156,6 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
-  max-width: 500px;
   margin-top: 24px;
 }
 
