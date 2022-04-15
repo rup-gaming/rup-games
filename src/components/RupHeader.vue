@@ -160,19 +160,6 @@ const message = useMessage();
 const showDrawer = ref(false);
 const src = ref("");
 
-const downloadImage = async () => {
-  try {
-    const { data, error } = await supabase.storage
-      .from("avatars")
-      .download(store.user.avatar_url);
-    if (error) throw error;
-    const copyOfData: any = data;
-    src.value = URL.createObjectURL(copyOfData);
-  } catch (error: any) {
-    console.error("Error downloading image: ", error.message);
-  }
-};
-
 const disableDarkMode = (isDark: boolean) => {
   store.setDarkMode(isDark);
 };
@@ -249,14 +236,6 @@ const profileOptions = [
     key: "sign-out",
   },
 ];
-
-// const copyAvatarURL: any = store.user.avatar_url;
-
-onMounted(() => {
-  if (store.user.isSignedIn) {
-    downloadImage();
-  }
-});
 
 defineComponent({
   DiamondSharp,
