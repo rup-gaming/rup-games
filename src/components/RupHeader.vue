@@ -237,6 +237,7 @@ defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: fixed;
 }
 
 .drawer-theme-btn-container {
