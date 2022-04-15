@@ -55,9 +55,15 @@
         </n-button>
 
         <div style="padding-left: 20px; display: flex; align-items: center">
-          <n-button style="padding: 0px; height: 40px">
-            <n-avatar size="large" :src="store.user.avatar_url"> </n-avatar>
-          </n-button>
+          <n-dropdown
+            trigger="click"
+            :options="profileOptions"
+            @select="handleSelect"
+          >
+            <n-button style="padding: 0px; height: 40px">
+              <n-avatar size="large" :src="store.user.avatar_url"> </n-avatar>
+            </n-button>
+          </n-dropdown>
         </div>
       </div>
 
@@ -117,8 +123,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, h, ref, watch, onMounted } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { defineComponent, h, ref, onMounted } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import { supabase } from "../supabase";
 import {
   NLayoutHeader,
@@ -129,6 +135,8 @@ import {
   NDrawer,
   NDrawerContent,
   NAvatar,
+  useMessage,
+  NDropdown,
 } from "naive-ui";
 import type { MenuOption } from "naive-ui";
 import { useStore } from "../store/store";
@@ -141,9 +149,12 @@ import {
 
 const store = useStore();
 const currentRoute = useRoute();
+const router = useRouter();
+const message = useMessage();
 
 const showDrawer = ref(false);
 const src = ref("");
+const showDropdown = ref(false);
 
 const downloadImage = async () => {
   try {
@@ -164,6 +175,20 @@ function disableDarkMode(isDark: boolean) {
 
 function activateDrawer() {
   showDrawer.value = !showDrawer.value;
+}
+
+async function handleSelect(key: string | number) {
+  if (String(key) === "profile") {
+    router.push("/profile");
+  } else {
+    let { error } = await supabase.auth.signOut();
+    if (error) {
+      message.error(
+        "Failed to sign out! If issue persists, delete your token in localStorage"
+      );
+    }
+    router.push("/");
+  }
 }
 
 const appNavigation: MenuOption[] = [
@@ -203,6 +228,17 @@ const appNavigation: MenuOption[] = [
         { default: () => "Play" }
       ),
     key: "play",
+  },
+];
+
+const profileOptions = [
+  {
+    label: "Profile",
+    key: "profile",
+  },
+  {
+    label: "Sign Out",
+    key: "sign-out",
   },
 ];
 

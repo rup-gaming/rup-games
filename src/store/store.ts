@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 
 interface UserDataValues {
+  isSignedIn: boolean;
   id: string;
   email: string;
   username?: string;
@@ -15,6 +16,7 @@ export const useStore = defineStore("main", {
       windowWidth: "",
       darkMode: false,
       user: {
+        isSignedIn: false,
         id: "",
         email: "",
         username: "",
@@ -43,6 +45,7 @@ export const useStore = defineStore("main", {
     },
     setUser(userData: UserDataValues) {
       const newData: UserDataValues = {
+        isSignedIn: userData.isSignedIn || false,
         id: userData.id,
         email: userData.email,
         username: userData.username,
